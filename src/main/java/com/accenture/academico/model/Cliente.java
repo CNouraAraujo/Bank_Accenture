@@ -44,7 +44,7 @@ public class Cliente {
 
     @OneToOne
     @JoinColumn(name = "id_endereco", nullable = false)
-    private EnderecoCliente endereco;
+    private EnderecoCliente enderecoCliente;
     
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

@@ -1,8 +1,12 @@
 package com.accenture.academico.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.accenture.academico.model.Cliente;
 import com.accenture.academico.model.ContaBancaria;
 import com.accenture.academico.repository.ContaRepository;
 
@@ -11,6 +15,9 @@ public class ContaService {
 
 	@Autowired
 	private ContaRepository contaRepository;
+	
+	@Autowired
+	private ClienteService clienteService;
 
 	public ContaBancaria depositar(Integer idConta, Double valor) {
 		ContaBancaria conta = contaRepository.findById(idConta)
@@ -59,5 +66,14 @@ public class ContaService {
 		contaRepository.save(contaRemetente);
 		contaRepository.save(contaDestinataria);
 	}
+	
+	public Optional<List<ContaBancaria>> listarContasPorCliente(Integer idAgencia, Integer idCliente) {
+        return clienteService.obterClienteDeAgencia(idAgencia, idCliente)
+                .map(Cliente::getContaBancarias);
+    }
+	
+	public Optional<ContaBancaria> obterContaPorId(Integer idAgencia, Integer idCliente, Integer idConta) {
+        return contaRepository.findByIdAndClienteIdAndClienteAgenciaId(idConta, idCliente, idAgencia);
+    }
 
 }

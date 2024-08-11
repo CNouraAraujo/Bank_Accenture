@@ -26,7 +26,10 @@ import com.accenture.academico.repository.AgenciaRepository;
 import com.accenture.academico.repository.ClienteRepository;
 import com.accenture.academico.repository.ContaRepository;
 import com.accenture.academico.repository.EnderecoClienteRepository;
+import com.accenture.academico.service.AgenciaService;
+import com.accenture.academico.service.ClienteService;
 import com.accenture.academico.service.ContaService;
+import com.accenture.academico.service.EnderecoClienteService;
 
 @RestController
 @RequestMapping("/bank")
@@ -36,101 +39,83 @@ public class AgenciaController {
 	private AgenciaRepository agenciaRepository;
 
 	@Autowired
+	private AgenciaService agenciaService;
+
+	@Autowired
 	private ClienteRepository clienteRepository;
 
 	@Autowired
+	private ClienteService clienteService;
+
+	@Autowired
 	private EnderecoClienteRepository enderecoClienteRepository;
+
+//	@Autowired
+//	private EnderecoClienteService enderecoClienteService;
 
 	@Autowired
 	private ContaRepository contaRepository;
 
 	@Autowired
 	private ContaService contaService;
-	
-	@GetMapping
+
+	@GetMapping // ===============================================================================================
 	public List<Agencia> listarAgencias() {
-		return agenciaRepository.findAll();
+		return agenciaService.listarAgencias();
 	}
 
-	@GetMapping("/{idAgencia}")
+	@GetMapping("/{idAgencia}") // ===============================================================================================
 	public ResponseEntity<Agencia> obterAgencia(@PathVariable Integer idAgencia) {
-		Optional<Agencia> agencia = agenciaRepository.findById(idAgencia);
-		return agencia.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+		return agenciaService.obterAgencia(idAgencia).map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@GetMapping("/{idAgencia}/clientes")
+	@GetMapping("/{idAgencia}/clientes") // ===============================================================================================
 	public ResponseEntity<List<Cliente>> listarClientesPorAgencia(@PathVariable Integer idAgencia) {
-		Optional<Agencia> agencia = agenciaRepository.findById(idAgencia);
+		Optional<Agencia> agencia = agenciaService.obterAgencia(idAgencia);
 		if (agencia.isPresent()) {
-			List<Cliente> clientes = clienteRepository.findAllByAgencia_IdAgencia(idAgencia);
+			List<Cliente> clientes = clienteService.listarClientesPorAgencia(idAgencia);
 			return ResponseEntity.ok(clientes);
 		} else {
 			return ResponseEntity.notFound().build();
 		}
 	}
 
-	@GetMapping("/{idAgencia}/clientes/{idCliente}")
+	@GetMapping("/{idAgencia}/clientes/{idCliente}") // ===============================================================================================
 	public ResponseEntity<Cliente> obterClienteDeAgencia(@PathVariable Integer idAgencia,
 			@PathVariable Integer idCliente) {
-		Optional<Agencia> agencia = agenciaRepository.findById(idAgencia);
-		if (agencia.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
-		Optional<Cliente> cliente = clienteRepository.findById(idCliente);
-		if (cliente.isEmpty() || !cliente.get().getAgencia().getIdAgencia().equals(idAgencia)) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.ok(cliente.get());
+		return clienteService.obterClienteDeAgencia(idAgencia, idCliente).map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@GetMapping("/{idAgencia}/clientes/{idCliente}/contas")
+	@GetMapping("/{idAgencia}/clientes/{idCliente}/contas") // ===============================================================================================
 	public ResponseEntity<List<ContaBancaria>> listarContasPorCliente(@PathVariable Integer idAgencia,
 			@PathVariable Integer idCliente) {
 		try {
-			Optional<Agencia> agenciaOpt = agenciaRepository.findById(idAgencia);
-			Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
-			if (agenciaOpt.isEmpty()) {
-				return ResponseEntity.notFound().build();
-			}
-			if (clienteOpt.isEmpty()) {
-				return ResponseEntity.notFound().build();
-			}
-			Cliente cliente = clienteOpt.get();
-			List<ContaBancaria> contaBancarias = cliente.getContaBancarias();
-			return ResponseEntity.ok(contaBancarias);
+			return contaService.listarContasPorCliente(idAgencia, idCliente).map(ResponseEntity::ok)
+					.orElseGet(() -> ResponseEntity.notFound().build());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(500).build();
 		}
 	}
 
-	@GetMapping("/{idAgencia}/clientes/{idCliente}/contas/{idConta}")
+	@GetMapping("/{idAgencia}/clientes/{idCliente}/contas/{idConta}") // ===============================================================================================
 	public ResponseEntity<ContaBancaria> obterContaPorId(@PathVariable Integer idAgencia,
 			@PathVariable Integer idCliente, @PathVariable Integer idConta) {
 		try {
-			Cliente cliente = clienteRepository.findById(idCliente)
-					.orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-			Optional<ContaBancaria> contaOpt = contaRepository.findById(idConta);
-			if (contaOpt.isPresent()) {
-				ContaBancaria contaBancaria = contaOpt.get();
-				if (contaBancaria.getCliente().getId().equals(idCliente)) {
-					return ResponseEntity.ok(contaBancaria);
-				} else {
-					return ResponseEntity.status(404).body(null);
-				}
-			} else {
-				return ResponseEntity.status(404).body(null);
-			}
+			return contaService.obterContaPorId(idAgencia, idCliente, idConta).map(ResponseEntity::ok)
+					.orElseGet(() -> ResponseEntity.notFound().build());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(500).build();
 		}
 	}
 
-	@PostMapping
+	@PostMapping // ===============================================================================================
 	public ResponseEntity<Agencia> criarAgencia(@RequestBody Agencia agencia) {
 		try {
-			Agencia agenciaSalva = agenciaRepository.save(agencia);
+			Agencia agenciaSalva = agenciaService.criarAgencia(agencia);
 			return ResponseEntity.created(URI.create("/bank/" + agenciaSalva.getIdAgencia())).body(agenciaSalva);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
@@ -150,7 +135,7 @@ public class AgenciaController {
 			cliente.setNome(dto.getNome());
 			cliente.setCpf(dto.getCpf());
 			cliente.setTelefone(dto.getTelefone());
-			cliente.setEndereco(endereco);
+			cliente.setEnderecoCliente(endereco);
 			cliente.setAgencia(agencia);
 
 			List<ContaBancaria> contaBancarias = dto.getContas().stream().map(contaDTO -> {
@@ -247,8 +232,8 @@ public class AgenciaController {
 					return ResponseEntity.notFound().build();
 				}
 			} else {
-				return ResponseEntity.notFound().build(); 
-															
+				return ResponseEntity.notFound().build();
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -257,60 +242,45 @@ public class AgenciaController {
 	}
 
 	@PostMapping("/{idAgencia}/clientes/{idCliente}/contas/{idConta}/deposito")
-	public ResponseEntity<ContaBancaria> depositar(
-	        @PathVariable Integer idAgencia,
-	        @PathVariable Integer idCliente,
-	        @PathVariable Integer idConta,
-	        @RequestBody Map<String, Double> request) {
-	    try {
-	        Double valor = request.get("valor");
-	        ContaBancaria conta = contaService.depositar(idConta, valor);
-	        return ResponseEntity.ok(conta);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(500).build();
-	    }
+	public ResponseEntity<ContaBancaria> depositar(@PathVariable Integer idAgencia, @PathVariable Integer idCliente,
+			@PathVariable Integer idConta, @RequestBody Map<String, Double> request) {
+		try {
+			Double valor = request.get("valor");
+			ContaBancaria conta = contaService.depositar(idConta, valor);
+			return ResponseEntity.ok(conta);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(500).build();
+		}
 	}
-	
+
 	@PostMapping("/{idAgencia}/clientes/{idCliente}/contas/{idConta}/saque")
-	public ResponseEntity<ContaBancaria> sacar(
-	        @PathVariable Integer idAgencia,
-	        @PathVariable Integer idCliente,
-	        @PathVariable Integer idConta,
-	        @RequestBody Map<String, Double> request) {
-	    try {
-	        Double valor = request.get("valor");
-	        ContaBancaria conta = contaService.sacar(idConta, valor);
-	        return ResponseEntity.ok(conta);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(500).build();
-	    }
+	public ResponseEntity<ContaBancaria> sacar(@PathVariable Integer idAgencia, @PathVariable Integer idCliente,
+			@PathVariable Integer idConta, @RequestBody Map<String, Double> request) {
+		try {
+			Double valor = request.get("valor");
+			ContaBancaria conta = contaService.sacar(idConta, valor);
+			return ResponseEntity.ok(conta);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(500).build();
+		}
 	}
-	
+
 	@PostMapping("/{idAgenciaRemetente}/clientes/{idClienteRemetente}/contas/{idContaRemetente}/transferencia")
-	public ResponseEntity<String> transferirEntreContas(
-	        @PathVariable Integer idAgenciaRemetente,
-	        @PathVariable Integer idClienteRemetente,
-	        @PathVariable Integer idContaRemetente,
-	        @RequestParam Integer idAgenciaDestinataria,
-	        @RequestParam Integer idClienteDestinataria,
-	        @RequestParam Integer idContaDestinataria,
-	        @RequestBody Double valor) {
-	    try {
-	        contaService.transferir(
-	            idAgenciaRemetente, idClienteRemetente, idContaRemetente,
-	            idAgenciaDestinataria, idClienteDestinataria, idContaDestinataria, valor
-	        );
-	        return ResponseEntity.ok("Transferência realizada com sucesso.");
-	    } catch (IllegalArgumentException e) {
-	        return ResponseEntity.badRequest().body(e.getMessage());
-	    } catch (Exception e) {
-	        return ResponseEntity.status(500).body("Erro interno no servidor.");
-	    }
+	public ResponseEntity<String> transferirEntreContas(@PathVariable Integer idAgenciaRemetente,
+			@PathVariable Integer idClienteRemetente, @PathVariable Integer idContaRemetente,
+			@RequestParam Integer idAgenciaDestinataria, @RequestParam Integer idClienteDestinataria,
+			@RequestParam Integer idContaDestinataria, @RequestBody Double valor) {
+		try {
+			contaService.transferir(idAgenciaRemetente, idClienteRemetente, idContaRemetente, idAgenciaDestinataria,
+					idClienteDestinataria, idContaDestinataria, valor);
+			return ResponseEntity.ok("Transferência realizada com sucesso.");
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("Erro interno no servidor.");
+		}
 	}
-
-
-
 
 }
