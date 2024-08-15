@@ -40,11 +40,11 @@ public class ClienteService {
 		}
 
 	
-	public void deletarCliente(Integer idAgencia, Integer idCliente) {
+	public void deletarCliente(Integer numeroAgencia, Integer idCliente) {
         Cliente cliente = clienteRepository.findById(idCliente)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-        if (!cliente.getAgencia().getIdAgencia().equals(idAgencia)) {
+        if (!cliente.getAgencia().getNumeroAgencia().equals(numeroAgencia)) {
             throw new RuntimeException("Cliente não pertence à agência informada");
         }
 

@@ -98,8 +98,8 @@ public class ContaService {
 		return contaAtualizada;
 	}
 
-	public void transferir(Integer idAgenciaRemetente, Integer idClienteRemetente, Integer idContaRemetente,
-			Integer idAgenciaDestinataria, Integer idClienteDestinatario, Integer idContaDestinataria, Double valor) {
+	public void transferir(Integer numeroAgenciaRemetente, Integer idClienteRemetente, Integer idContaRemetente,
+			Integer numeroAgenciaDestinataria, Integer idClienteDestinatario, Integer idContaDestinataria, Double valor) {
 		if (valor <= 0) {
 			throw new IllegalArgumentException("O valor da transferência deve ser positivo.");
 		}
@@ -108,7 +108,7 @@ public class ContaService {
 				.orElseThrow(() -> new IllegalArgumentException("Conta remetente não encontrada"));
 
 		if (!contaRemetente.getCliente().getId().equals(idClienteRemetente)
-				|| !contaRemetente.getCliente().getAgencia().getIdAgencia().equals(idAgenciaRemetente)) {
+				|| !contaRemetente.getCliente().getAgencia().getNumeroAgencia().equals(numeroAgenciaRemetente)) {
 			throw new IllegalArgumentException("Conta remetente não pertence ao cliente ou agência corretos.");
 		}
 
@@ -120,7 +120,7 @@ public class ContaService {
 				.orElseThrow(() -> new IllegalArgumentException("Conta destinatária não encontrada"));
 
 		if (!contaDestinataria.getCliente().getId().equals(idClienteDestinatario)
-				|| !contaDestinataria.getCliente().getAgencia().getIdAgencia().equals(idAgenciaDestinataria)) {
+				|| !contaDestinataria.getCliente().getAgencia().getNumeroAgencia().equals(numeroAgenciaDestinataria)) {
 			throw new IllegalArgumentException("Conta destinatária não pertence ao cliente ou agência corretos.");
 		}
 

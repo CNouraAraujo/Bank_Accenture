@@ -42,13 +42,12 @@ public class ContaController {
 	}
 
 	@PostMapping("/{numeroAgencia}/clientes/{idCliente}/contas") // ===============================================================================================
-	public ResponseEntity<ContaBancaria> criarConta(@PathVariable Integer numeroAgencia, @PathVariable Integer idCliente,
-			@RequestBody ContaBancaria contaBancaria) {
+	public ResponseEntity<ContaBancaria> criarConta(@PathVariable Integer numeroAgencia,
+			@PathVariable Integer idCliente, @RequestBody ContaBancaria contaBancaria) {
 		try {
 			ContaBancaria contaSalva = contaService.criarConta(numeroAgencia, idCliente, contaBancaria);
-			return ResponseEntity
-					.created(URI.create(
-							"/bank/" + numeroAgencia + "/clientes/" + idCliente + "/contas/" + contaSalva.getNumeroConta()))
+			return ResponseEntity.created(URI.create(
+					"/bank/" + numeroAgencia + "/clientes/" + idCliente + "/contas/" + contaSalva.getNumeroConta()))
 					.body(contaSalva);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,8 +102,8 @@ public class ContaController {
 			@RequestParam Integer numeroAgenciaDestinataria, @RequestParam Integer idClienteDestinatario,
 			@RequestParam Integer idContaDestinataria, @RequestBody Double valor) {
 		try {
-			contaService.transferir(numeroAgenciaRemetente, idClienteRemetente, idContaRemetente, numeroAgenciaDestinataria,
-					idClienteDestinatario, idContaDestinataria, valor);
+			contaService.transferir(numeroAgenciaRemetente, idClienteRemetente, idContaRemetente,
+					numeroAgenciaDestinataria, idClienteDestinatario, idContaDestinataria, valor);
 
 			return ResponseEntity.ok("Transferência realizada com sucesso.");
 		} catch (IllegalArgumentException e) {
