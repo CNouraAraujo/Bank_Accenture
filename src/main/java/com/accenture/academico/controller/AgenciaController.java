@@ -301,9 +301,9 @@ public class AgenciaController {
         return agenciaService.listarAgencias();
     }
 
-    @GetMapping("/{idAgencia}")
-    public ResponseEntity<Agencia> obterAgencia(@PathVariable Integer idAgencia) {
-        return agenciaService.obterAgencia(idAgencia).map(ResponseEntity::ok)
+    @GetMapping("/{numeroAgencia}")
+    public ResponseEntity<Agencia> obterAgencia(@PathVariable Integer numeroAgencia) {
+        return agenciaService.obterAgencia(numeroAgencia).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -317,10 +317,10 @@ public class AgenciaController {
         }
     }
 
-    @DeleteMapping("/{idAgencia}")
-    public ResponseEntity<Void> deletarAgencia(@PathVariable Integer idAgencia) {
+    @DeleteMapping("/{numeroAgencia}")
+    public ResponseEntity<Void> deletarAgencia(@PathVariable Integer numeroAgencia) {
         try {
-            agenciaService.deletarAgencia(idAgencia);
+            agenciaService.deletarAgencia(numeroAgencia);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -330,9 +330,9 @@ public class AgenciaController {
         }
     }
     
-    @PutMapping("/atualizar/{idAgencia}")
-    public ResponseEntity<Agencia> atualizarAgencia(@PathVariable Integer idAgencia, @RequestBody Agencia agencia) {
-        Optional<Agencia> agenciaAtualizada = agenciaService.atualizarAgencia(idAgencia, agencia);
+    @PutMapping("/atualizar/{numeroAgencia}")
+    public ResponseEntity<Agencia> atualizarAgencia(@PathVariable Integer numeroAgencia, @RequestBody Agencia agencia) {
+        Optional<Agencia> agenciaAtualizada = agenciaService.atualizarAgencia(numeroAgencia, agencia);
         return agenciaAtualizada.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

@@ -12,11 +12,11 @@ import com.accenture.academico.model.ContaBancaria;
 
 @Repository
 public interface ContaRepository extends JpaRepository<ContaBancaria, Integer> {
-	 List<ContaBancaria> findByCliente_Id(Integer clienteId);
-	 
-	 @Query("SELECT c FROM ContaBancaria c WHERE c.numeroConta = :idConta AND c.cliente.id = :idCliente AND c.cliente.agencia.idAgencia = :idAgencia")
-	    Optional<ContaBancaria> findByIdAndClienteIdAndClienteAgenciaId(@Param("idConta") Integer idConta, 
-	                                                                    @Param("idCliente") Integer idCliente, 
-	                                                                    @Param("idAgencia") Integer idAgencia);
-
+    
+    List<ContaBancaria> findByCliente_Id(Integer clienteId);
+    
+    @Query("SELECT c FROM ContaBancaria c WHERE c.numeroConta = :numeroConta AND c.cliente.id = :idCliente AND c.cliente.agencia.numeroAgencia = :numeroAgencia")
+    Optional<ContaBancaria> findByNumeroContaAndClienteIdAndClienteAgenciaNumero(@Param("numeroConta") Integer numeroConta, 
+                                                                                  @Param("idCliente") Integer idCliente, 
+                                                                                  @Param("numeroAgencia") Integer numeroAgencia);
 }

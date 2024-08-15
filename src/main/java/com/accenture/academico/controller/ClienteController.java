@@ -31,29 +31,29 @@ public class ClienteController {
 	@Autowired
 	private AgenciaService agenciaService;
 
-	@GetMapping("/{idAgencia}/clientes") // ===============================================================================================
-	public ResponseEntity<List<Cliente>> listarClientesPorAgencia(@PathVariable Integer idAgencia) {
-		Optional<Agencia> agencia = agenciaService.obterAgencia(idAgencia);
+	@GetMapping("/{numeroAgencia}/clientes") // ===============================================================================================
+	public ResponseEntity<List<Cliente>> listarClientesPorAgencia(@PathVariable Integer numeroAgencia) {
+		Optional<Agencia> agencia = agenciaService.obterAgencia(numeroAgencia);
 		if (agencia.isPresent()) {
-			List<Cliente> clientes = clienteService.listarClientesPorAgencia(idAgencia);
+			List<Cliente> clientes = clienteService.listarClientesPorAgencia(numeroAgencia);
 			return ResponseEntity.ok(clientes);
 		} else {
 			return ResponseEntity.notFound().build();
 		}
 	}
 
-	@GetMapping("/{idAgencia}/clientes/{idCliente}") // ===============================================================================================
-	public ResponseEntity<Cliente> obterClienteDeAgencia(@PathVariable Integer idAgencia,
+	@GetMapping("/{numeroAgencia}/clientes/{idCliente}") // ===============================================================================================
+	public ResponseEntity<Cliente> obterClienteDeAgencia(@PathVariable Integer numeroAgencia,
 			@PathVariable Integer idCliente) {
-		return clienteService.obterClienteDeAgencia(idAgencia, idCliente).map(ResponseEntity::ok)
+		return clienteService.obterClienteDeAgencia(numeroAgencia, idCliente).map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@PostMapping("/{idAgencia}/clientes")
-	public ResponseEntity<Cliente> criarCliente(@PathVariable Integer idAgencia, @RequestBody ClienteEnderecoDTO dto) {
+	@PostMapping("/{numeroAgencia}/clientes")
+	public ResponseEntity<Cliente> criarCliente(@PathVariable Integer numeroAgencia, @RequestBody ClienteEnderecoDTO dto) {
 		try {
-			Cliente clienteSalvo = clienteService.criarCliente(idAgencia, dto);
-			return ResponseEntity.created(URI.create("/bank/" + idAgencia + "/clientes/" + clienteSalvo.getId()))
+			Cliente clienteSalvo = clienteService.criarCliente(numeroAgencia, dto);
+			return ResponseEntity.created(URI.create("/bank/" + numeroAgencia + "/clientes/" + clienteSalvo.getId()))
 					.body(clienteSalvo);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,10 +61,10 @@ public class ClienteController {
 		}
 	}
 
-	@DeleteMapping("/{idAgencia}/clientes/{idCliente}") // ===============================================================================================
-	public ResponseEntity<Void> deletarCliente(@PathVariable Integer idAgencia, @PathVariable Integer idCliente) {
+	@DeleteMapping("/{numeroAgencia}/clientes/{idCliente}") // ===============================================================================================
+	public ResponseEntity<Void> deletarCliente(@PathVariable Integer numeroAgencia, @PathVariable Integer idCliente) {
 		try {
-			clienteService.deletarCliente(idAgencia, idCliente);
+			clienteService.deletarCliente(numeroAgencia, idCliente);
 			return ResponseEntity.noContent().build();
 		} catch (RuntimeException e) {
 			return ResponseEntity.notFound().build();

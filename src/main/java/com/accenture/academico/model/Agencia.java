@@ -48,7 +48,6 @@ public class Agencia {
     @PrePersist
     private void prePersist() {
         if (numeroAgencia == null) {
-            // Lógica para gerar o número da agência automaticamente
             numeroAgencia = generateNumeroAgencia();
         }
     }

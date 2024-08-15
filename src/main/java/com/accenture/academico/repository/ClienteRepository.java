@@ -7,11 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.accenture.academico.model.Cliente;
+import com.accenture.academico.model.Agencia;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
-	 List<Cliente> findAllByAgencia_IdAgencia(Integer idAgencia);
+    // Adiciona um método para buscar clientes pelo número da agência
+    List<Cliente> findAllByAgencia_NumeroAgencia(Integer numeroAgencia);
 
-	 Optional<Cliente> findByIdAndAgencia_IdAgencia(Integer idCliente, Integer idAgencia);
+    // Adiciona um método para buscar cliente por ID e número da agência
+    Optional<Cliente> findByIdAndAgencia_NumeroAgencia(Integer idCliente, Integer numeroAgencia);
 }

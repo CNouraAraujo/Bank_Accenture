@@ -30,12 +30,12 @@ public class OperacoesClienteController {
 	@Autowired
 	private ExtratoService extratoService;
 
-	@GetMapping("/{idAgencia}/clientes/{idCliente}/operacoesCliente")
-	public ResponseEntity<List<OperacoesClienteDTO>> listarOperacoesPorCliente(@PathVariable Integer idAgencia,
+	@GetMapping("/{numeroAgencia}/clientes/{idCliente}/operacoesCliente")
+	public ResponseEntity<List<OperacoesClienteDTO>> listarOperacoesPorCliente(@PathVariable Integer numeroAgencia,
 			@PathVariable Integer idCliente) {
 		try {
 			Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
-			if (clienteOpt.isPresent() && clienteOpt.get().getAgencia().getIdAgencia().equals(idAgencia)) {
+			if (clienteOpt.isPresent() && clienteOpt.get().getAgencia().getNumeroAgencia().equals(numeroAgencia)) {
 				List<OperacoesClienteDTO> operacoesDTO = operacoesClienteService.getOperacoesPorCliente(idCliente);
 				return ResponseEntity.ok(operacoesDTO);
 			} else {
@@ -47,10 +47,10 @@ public class OperacoesClienteController {
 		}
 	}
 	
-	 @GetMapping("/{idAgencia}/clientes/{idCliente}/extrato") // ===============================================================================================
-	    public ResponseEntity<ExtratoDTO> obterExtrato(@PathVariable Integer idAgencia, @PathVariable Integer idCliente) {
+	 @GetMapping("/{numeroAgencia}/clientes/{idCliente}/extrato") // ===============================================================================================
+	    public ResponseEntity<ExtratoDTO> obterExtrato(@PathVariable Integer numeroAgencia, @PathVariable Integer idCliente) {
 	        try {
-	            Optional<ExtratoDTO> extratoOpt = extratoService.obterExtrato(idAgencia, idCliente);
+	            Optional<ExtratoDTO> extratoOpt = extratoService.obterExtrato(numeroAgencia, idCliente);
 	            return extratoOpt.map(ResponseEntity::ok)
 	                    .orElseGet(() -> ResponseEntity.notFound().build());
 	        } catch (Exception e) {

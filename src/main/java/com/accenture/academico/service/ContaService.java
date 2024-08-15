@@ -37,9 +37,9 @@ public class ContaService {
 	@Autowired
 	private OperacoesClienteRepository operacoesClienteRepository;
 
-	public ContaBancaria criarConta(Integer idAgencia, Integer idCliente, ContaBancaria contaBancaria)
+	public ContaBancaria criarConta(Integer numeroAgencia, Integer idCliente, ContaBancaria contaBancaria)
 			throws Exception {
-		Optional<Agencia> agenciaOpt = agenciaRepository.findById(idAgencia);
+		Optional<Agencia> agenciaOpt = agenciaRepository.findByNumeroAgencia(numeroAgencia);
 		Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
 
 		if (agenciaOpt.isEmpty()) {
@@ -151,8 +151,8 @@ public class ContaService {
 		return clienteService.obterClienteDeAgencia(idAgencia, idCliente).map(Cliente::getContaBancarias);
 	}
 
-	public Optional<ContaBancaria> obterContaPorId(Integer idAgencia, Integer idCliente, Integer idConta) {
-		return contaRepository.findByIdAndClienteIdAndClienteAgenciaId(idConta, idCliente, idAgencia);
+	public Optional<ContaBancaria> obterContaPorId(Integer numeroAgencia, Integer idCliente, Integer idConta) {
+		return contaRepository.findByNumeroContaAndClienteIdAndClienteAgenciaNumero(idConta, idCliente, numeroAgencia);
 	}
 
 	public void deletarConta(Integer idAgencia, Integer idCliente, Integer idConta) {

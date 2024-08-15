@@ -21,10 +21,10 @@ public class ExtratoService {
     @Autowired
     private OperacoesClienteService operacoesClienteService;
 
-    public Optional<ExtratoDTO> obterExtrato(Integer idAgencia, Integer idCliente) {
+    public Optional<ExtratoDTO> obterExtrato(Integer numeroAgencia, Integer idCliente) {
         Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
 
-        if (clienteOpt.isPresent() && clienteOpt.get().getAgencia().getIdAgencia().equals(idAgencia)) {
+        if (clienteOpt.isPresent() && clienteOpt.get().getAgencia().getNumeroAgencia().equals(numeroAgencia)) {
             Cliente cliente = clienteOpt.get();
             
             // Preencher dados do cliente

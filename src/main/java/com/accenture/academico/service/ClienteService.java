@@ -32,13 +32,13 @@ public class ClienteService {
 	@Autowired
 	private ContaRepository contaRepository;
 	
-	public List<Cliente> listarClientesPorAgencia(Integer idAgencia) {
-        return clienteRepository.findAllByAgencia_IdAgencia(idAgencia);
-    }
-	
-	public Optional<Cliente> obterClienteDeAgencia(Integer idAgencia, Integer idCliente) {
-	    return clienteRepository.findByIdAndAgencia_IdAgencia(idCliente, idAgencia);
-	}
+	 public List<Cliente> listarClientesPorAgencia(Integer numeroAgencia) {
+	        return clienteRepository.findAllByAgencia_NumeroAgencia(numeroAgencia);
+	    }
+	 public Optional<Cliente> obterClienteDeAgencia(Integer numeroAgencia, Integer idCliente) {
+		    return clienteRepository.findByIdAndAgencia_NumeroAgencia(idCliente, numeroAgencia);
+		}
+
 	
 	public void deletarCliente(Integer idAgencia, Integer idCliente) {
         Cliente cliente = clienteRepository.findById(idCliente)
@@ -51,8 +51,8 @@ public class ClienteService {
         clienteRepository.delete(cliente);
     }
 
-	 public Cliente criarCliente(Integer idAgencia, ClienteEnderecoDTO dto) {
-	        Agencia agencia = agenciaRepository.findById(idAgencia)
+	 public Cliente criarCliente(Integer numeroAgencia, ClienteEnderecoDTO dto) {
+	        Agencia agencia = agenciaRepository.findByNumeroAgencia(numeroAgencia)
 	                .orElseThrow(() -> new RuntimeException("Agência não encontrada"));
 
 	        EnderecoCliente endereco = dto.getEndereco();
