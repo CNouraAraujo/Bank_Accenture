@@ -1,11 +1,9 @@
 package com.accenture.academico.controller;
 
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +22,7 @@ import com.accenture.academico.dto.OperacoesClienteDTO;
 import com.accenture.academico.model.Agencia;
 import com.accenture.academico.model.Cliente;
 import com.accenture.academico.model.ContaBancaria;
-import com.accenture.academico.model.EnderecoCliente;
-import com.accenture.academico.repository.AgenciaRepository;
 import com.accenture.academico.repository.ClienteRepository;
-import com.accenture.academico.repository.ContaRepository;
-import com.accenture.academico.repository.EnderecoClienteRepository;
 import com.accenture.academico.service.AgenciaService;
 import com.accenture.academico.service.ClienteService;
 import com.accenture.academico.service.ContaService;
@@ -44,9 +38,6 @@ public class AgenciaController {
 	private ExtratoService extratoService;
 
 	@Autowired
-	private AgenciaRepository agenciaRepository;
-
-	@Autowired
 	private AgenciaService agenciaService;
 
 	@Autowired
@@ -55,14 +46,6 @@ public class AgenciaController {
 	@Autowired
 	private ClienteService clienteService;
 
-	@Autowired
-	private EnderecoClienteRepository enderecoClienteRepository;
-
-//	@Autowired
-//	private EnderecoClienteService enderecoClienteService;
-
-	@Autowired
-	private ContaRepository contaRepository;
 
 	@Autowired
 	private ContaService contaService;
@@ -134,42 +117,16 @@ public class AgenciaController {
 	}
 
 	@PostMapping("/{idAgencia}/clientes")
-	public ResponseEntity<Cliente> criarCliente(@PathVariable Integer idAgencia, @RequestBody ClienteEnderecoDTO dto) {
-	    try {
-	        Agencia agencia = agenciaRepository.findById(idAgencia)
-	                .orElseThrow(() -> new RuntimeException("Agência não encontrada"));
-
-	        EnderecoCliente endereco = dto.getEndereco();
-	        enderecoClienteRepository.save(endereco);
-
-	        Cliente cliente = new Cliente();
-	        cliente.setNome(dto.getNome());
-	        cliente.setCpf(dto.getCpf());
-	        cliente.setTelefone(dto.getTelefone());
-	        cliente.setSenha(dto.getSenha()); 
-	        cliente.setEnderecoCliente(endereco);
-	        cliente.setAgencia(agencia);
-
-	        List<ContaBancaria> contaBancarias = dto.getContas().stream().map(contaDTO -> {
-	            ContaBancaria contaBancaria = new ContaBancaria();
-	            contaBancaria.setSaldo(contaDTO.getSaldo());
-	            contaBancaria.setTipo(contaDTO.getTipo());
-	            contaBancaria.setCliente(cliente);
-	            return contaBancaria;
-	        }).collect(Collectors.toList());
-	        cliente.setContaBancarias(contaBancarias);
-
-	        Cliente clienteSalvo = clienteRepository.save(cliente);
-	        contaRepository.saveAll(contaBancarias);
-
-	        clienteSalvo.setContaBancarias(contaRepository.findByCliente_Id(clienteSalvo.getId()));
-	        return ResponseEntity.created(URI.create("/bank/" + idAgencia + "/clientes/" + clienteSalvo.getId()))
-	                .body(clienteSalvo);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(500).body(null);
-	    }
-	}
+    public ResponseEntity<Cliente> criarCliente(@PathVariable Integer idAgencia, @RequestBody ClienteEnderecoDTO dto) {
+        try {
+            Cliente clienteSalvo = clienteService.criarCliente(idAgencia, dto);
+            return ResponseEntity.created(URI.create("/bank/" + idAgencia + "/clientes/" + clienteSalvo.getId()))
+                    .body(clienteSalvo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
 
 	@PostMapping("/{idAgencia}/clientes/{idCliente}/contas") // ===============================================================================================
 	public ResponseEntity<ContaBancaria> criarConta(@PathVariable Integer idAgencia, @PathVariable Integer idCliente,
@@ -239,7 +196,7 @@ public class AgenciaController {
 	        }
 	    }
 	
-	@GetMapping("/{idAgencia}/clientes/{idCliente}/operacoesCliente") // ===============================================================================================
+	@GetMapping("/{idAgencia}/clientes/{idCliente}/operacoesCliente") 
 	public ResponseEntity<List<OperacoesClienteDTO>> listarOperacoesPorCliente(@PathVariable Integer idAgencia,
 	        @PathVariable Integer idCliente) {
 	    try {
