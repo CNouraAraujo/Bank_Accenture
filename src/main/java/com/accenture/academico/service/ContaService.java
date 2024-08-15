@@ -133,7 +133,7 @@ public class ContaService {
 // Registrar a operação de transferência para a conta remetente
 		OperacoesCliente operacaoRemetente = new OperacoesCliente();
 		operacaoRemetente.setCliente(contaRemetente.getCliente());
-		operacaoRemetente.setTipoOperacao(TipoOperacao.TRANSFERENCIA);
+		operacaoRemetente.setTipoOperacao(TipoOperacao.TRANSFERENCIA_REMETENTE);
 		operacaoRemetente.setValor(-valor); // Valor negativo para indicar saída
 		operacaoRemetente.setDataOperacao(LocalDateTime.now());
 		operacoesClienteRepository.save(operacaoRemetente);
@@ -141,7 +141,7 @@ public class ContaService {
 // Registrar a operação de transferência para a conta destinatária
 		OperacoesCliente operacaoDestinatario = new OperacoesCliente();
 		operacaoDestinatario.setCliente(contaDestinataria.getCliente());
-		operacaoDestinatario.setTipoOperacao(TipoOperacao.TRANSFERENCIA);
+		operacaoDestinatario.setTipoOperacao(TipoOperacao.TRANSFERENCIA_DESTINATARIO);
 		operacaoDestinatario.setValor(valor); // Valor positivo para indicar entrada
 		operacaoDestinatario.setDataOperacao(LocalDateTime.now());
 		operacoesClienteRepository.save(operacaoDestinatario);
