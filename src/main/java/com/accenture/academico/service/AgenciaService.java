@@ -14,17 +14,23 @@ public class AgenciaService {
 
 	@Autowired
 	private AgenciaRepository agenciaRepository;
-	
+
 	public List<Agencia> listarAgencias() {
-        return agenciaRepository.findAll();
-    }
-	
+		return agenciaRepository.findAll();
+	}
+
 	public Optional<Agencia> obterAgencia(Integer idAgencia) {
-        return agenciaRepository.findById(idAgencia);
-    }
-	
+		return agenciaRepository.findById(idAgencia);
+	}
+
 	public Agencia criarAgencia(Agencia agencia) {
-        return agenciaRepository.save(agencia);
-    }
-	
+		return agenciaRepository.save(agencia);
+	}
+
+	public void deletarAgencia(Integer idAgencia) {
+		Agencia agencia = agenciaRepository.findById(idAgencia)
+				.orElseThrow(() -> new RuntimeException("Agência não encontrada"));
+		agenciaRepository.delete(agencia);
+	}
+
 }

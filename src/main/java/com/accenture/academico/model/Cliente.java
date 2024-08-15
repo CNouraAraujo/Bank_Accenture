@@ -36,6 +36,9 @@ public class Cliente {
 
     @Column(length = 20, nullable = false)
     private String telefone;
+    
+    @Column(length = 50, nullable = false)
+    private String senha;
 
     @ManyToOne
     @JoinColumn(name = "id_agencia", nullable = false)

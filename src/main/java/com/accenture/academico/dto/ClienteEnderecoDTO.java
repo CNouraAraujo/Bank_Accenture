@@ -13,6 +13,7 @@ public class ClienteEnderecoDTO {
     private String nome;
     private String cpf;
     private String telefone;
+    private String senha;
     private EnderecoCliente endereco;
     private List<ContaDTO> contas = new ArrayList<>();
 
