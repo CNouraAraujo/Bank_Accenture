@@ -15,4 +15,5 @@ public interface AgenciaRepository extends JpaRepository<Agencia, Integer> {
     boolean existsByNumeroAgencia(Integer numeroAgencia);
 
     void deleteByNumeroAgencia(Integer numeroAgencia);
+    
 }

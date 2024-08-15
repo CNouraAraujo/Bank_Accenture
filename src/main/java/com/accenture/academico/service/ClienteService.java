@@ -97,5 +97,10 @@ public class ClienteService {
 	            return Optional.empty();
 	        }
 	    }
+	 
+	 public Cliente buscarClientePorAgenciaCpfSenha(Integer numeroAgencia, String cpf, String senha) {
+	        return clienteRepository.findByAgencia_NumeroAgenciaAndCpfAndSenha(numeroAgencia, cpf, senha)
+	                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+	    }
 	
 }
