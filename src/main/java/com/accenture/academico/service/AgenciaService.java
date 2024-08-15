@@ -32,5 +32,19 @@ public class AgenciaService {
 				.orElseThrow(() -> new RuntimeException("Agência não encontrada"));
 		agenciaRepository.delete(agencia);
 	}
+	
+	 public Optional<Agencia> atualizarAgencia(Integer idAgencia, Agencia agencia) {
+	        Optional<Agencia> agenciaExistente = agenciaRepository.findById(idAgencia);
+
+	        if (agenciaExistente.isPresent()) {
+	            Agencia agenciaParaAtualizar = agenciaExistente.get();
+	            agenciaParaAtualizar.setNome(agencia.getNome());
+	            agenciaParaAtualizar.setTelefone(agencia.getTelefone());
+
+	            return Optional.of(agenciaRepository.save(agenciaParaAtualizar));
+	        } else {
+	            return Optional.empty();
+	        }
+	    }
 
 }

@@ -81,5 +81,21 @@ public class ClienteService {
 	        clienteSalvo.setContaBancarias(contaRepository.findByCliente_Id(clienteSalvo.getId()));
 	        return clienteSalvo;
 	    }
+	 
+	 public Optional<Cliente> atualizarCliente(Integer idCliente, ClienteEnderecoDTO ClienteEnderecoDTO) {
+	        Optional<Cliente> cliente = clienteRepository.findById(idCliente);
+
+	        if (cliente.isPresent()) {
+	            Cliente clienteExistente = cliente.get();
+	            clienteExistente.setNome(ClienteEnderecoDTO.getNome());
+	            clienteExistente.setCpf(ClienteEnderecoDTO.getCpf());
+	            clienteExistente.setTelefone(ClienteEnderecoDTO.getTelefone());
+	            clienteExistente.setSenha(ClienteEnderecoDTO.getSenha());
+
+	            return Optional.of(clienteRepository.save(clienteExistente));
+	        } else {
+	            return Optional.empty();
+	        }
+	    }
 	
 }
