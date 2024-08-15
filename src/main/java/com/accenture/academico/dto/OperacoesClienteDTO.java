@@ -15,6 +15,13 @@ public class OperacoesClienteDTO {
     private LocalDateTime dataOperacao;
     private ClienteResumoDTO cliente;
 
+    public OperacoesClienteDTO(TipoOperacao tipoOperacao, double valor) {
+        this.tipoOperacao = tipoOperacao;
+        this.valor = valor;
+    }
+
+    public OperacoesClienteDTO(){}
+
     @Data
     public static class ClienteResumoDTO {
         private Integer id;
