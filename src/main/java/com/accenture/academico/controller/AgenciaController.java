@@ -25,12 +25,10 @@ import com.accenture.academico.model.Agencia;
 import com.accenture.academico.model.Cliente;
 import com.accenture.academico.model.ContaBancaria;
 import com.accenture.academico.model.EnderecoCliente;
-import com.accenture.academico.model.OperacoesCliente;
 import com.accenture.academico.repository.AgenciaRepository;
 import com.accenture.academico.repository.ClienteRepository;
 import com.accenture.academico.repository.ContaRepository;
 import com.accenture.academico.repository.EnderecoClienteRepository;
-import com.accenture.academico.repository.OperacoesClienteRepository;
 import com.accenture.academico.service.AgenciaService;
 import com.accenture.academico.service.ClienteService;
 import com.accenture.academico.service.ContaService;
@@ -72,9 +70,6 @@ public class AgenciaController {
 	@Autowired
 	private OperacoesClienteService operacoesClienteService;
 	
-	@Autowired
-	private OperacoesClienteRepository operacoesClienteRepository;
-
 	@GetMapping // ===============================================================================================
 	public List<Agencia> listarAgencias() {
 		return agenciaService.listarAgencias();
@@ -244,7 +239,7 @@ public class AgenciaController {
 	        }
 	    }
 	
-	@GetMapping("/{idAgencia}/clientes/{idCliente}/operacoesCliente")
+	@GetMapping("/{idAgencia}/clientes/{idCliente}/operacoesCliente") // ===============================================================================================
 	public ResponseEntity<List<OperacoesClienteDTO>> listarOperacoesPorCliente(@PathVariable Integer idAgencia,
 	        @PathVariable Integer idCliente) {
 	    try {
@@ -262,7 +257,7 @@ public class AgenciaController {
 	}
 
 
-	@PostMapping("/{idAgencia}/clientes/{idCliente}/contas/{idConta}/saque")
+	@PostMapping("/{idAgencia}/clientes/{idCliente}/contas/{idConta}/saque") // ===============================================================================================
     public ResponseEntity<ContaBancaria> sacar(@PathVariable Integer idAgencia, @PathVariable Integer idCliente,
                                                @PathVariable Integer idConta, @RequestBody Map<String, Double> request) {
         try {
@@ -279,7 +274,7 @@ public class AgenciaController {
 	
 	   
 
-	    @GetMapping("/{idAgencia}/clientes/{idCliente}/extrato")
+	    @GetMapping("/{idAgencia}/clientes/{idCliente}/extrato") // ===============================================================================================
 	    public ResponseEntity<ExtratoDTO> obterExtrato(@PathVariable Integer idAgencia, @PathVariable Integer idCliente) {
 	        try {
 	            Optional<ExtratoDTO> extratoOpt = extratoService.obterExtrato(idAgencia, idCliente);
@@ -294,7 +289,7 @@ public class AgenciaController {
 
 
 
-	    @PostMapping("/{idAgenciaRemetente}/clientes/{idClienteRemetente}/contas/{idContaRemetente}/transferencia")
+	    @PostMapping("/{idAgenciaRemetente}/clientes/{idClienteRemetente}/contas/{idContaRemetente}/transferencia") // ===============================================================================================
 	    public ResponseEntity<String> transferirEntreContas(@PathVariable Integer idAgenciaRemetente,
 	                                                         @PathVariable Integer idClienteRemetente, @PathVariable Integer idContaRemetente,
 	                                                         @RequestParam Integer idAgenciaDestinataria, @RequestParam Integer idClienteDestinatario,
