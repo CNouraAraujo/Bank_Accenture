@@ -231,26 +231,18 @@ public class AgenciaController {
         }
     }
 
-	@PostMapping("/{idAgencia}/clientes/{idCliente}/contas/{idConta}/deposito")
-	public ResponseEntity<ContaBancaria> depositar(@PathVariable Integer idAgencia, @PathVariable Integer idCliente,
-	        @PathVariable Integer idConta, @RequestBody Map<String, Double> request) {
-	    try {
-	        Double valor = request.get("valor");
-	        ContaBancaria conta = contaService.depositar(idConta, valor);
-
-	        OperacoesCliente operacao = new OperacoesCliente();
-	        operacao.setCliente(conta.getCliente());
-	        operacao.setTipoOperacao("Depósito");
-	        operacao.setValor(valor);
-	        operacao.setDataOperacao(LocalDateTime.now());
-	        operacoesClienteRepository.save(operacao);
-
-	        return ResponseEntity.ok(conta);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(500).build();
+	 @PostMapping("/{idAgencia}/clientes/{idCliente}/contas/{idConta}/deposito") // ===============================================================================================
+	    public ResponseEntity<ContaBancaria> depositar(@PathVariable Integer idAgencia, @PathVariable Integer idCliente,
+	            @PathVariable Integer idConta, @RequestBody Map<String, Double> request) {
+	        try {
+	            Double valor = request.get("valor");
+	            ContaBancaria conta = contaService.depositar(idConta, valor);
+	            return ResponseEntity.ok(conta);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return ResponseEntity.status(500).build();
+	        }
 	    }
-	}
 	
 	@GetMapping("/{idAgencia}/clientes/{idCliente}/operacoesCliente")
 	public ResponseEntity<List<OperacoesClienteDTO>> listarOperacoesPorCliente(@PathVariable Integer idAgencia,
@@ -270,27 +262,19 @@ public class AgenciaController {
 	}
 
 
-	@PostMapping("/{idAgencia}/clientes/{idCliente}/contas/{idConta}/saque") // ===============================================================================================
-	public ResponseEntity<ContaBancaria> sacar(@PathVariable Integer idAgencia, @PathVariable Integer idCliente,
-	                                           @PathVariable Integer idConta, @RequestBody Map<String, Double> request) {
-	    try {
-	        Double valor = request.get("valor");
-	        ContaBancaria conta = contaService.sacar(idConta, valor);
+	@PostMapping("/{idAgencia}/clientes/{idCliente}/contas/{idConta}/saque")
+    public ResponseEntity<ContaBancaria> sacar(@PathVariable Integer idAgencia, @PathVariable Integer idCliente,
+                                               @PathVariable Integer idConta, @RequestBody Map<String, Double> request) {
+        try {
+            Double valor = request.get("valor");
+            ContaBancaria conta = contaService.sacar(idConta, valor);
 
-	        // Registrar a operação de saque
-	        OperacoesCliente operacao = new OperacoesCliente();
-	        operacao.setCliente(conta.getCliente());
-	        operacao.setTipoOperacao("Saque");
-	        operacao.setValor(valor);
-	        operacao.setDataOperacao(LocalDateTime.now());
-	        operacoesClienteRepository.save(operacao);
-
-	        return ResponseEntity.ok(conta);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(500).build();
-	    }
-	}
+            return ResponseEntity.ok(conta);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
+    }
 	
 	
 	   
@@ -310,40 +294,23 @@ public class AgenciaController {
 
 
 
-	@PostMapping("/{idAgenciaRemetente}/clientes/{idClienteRemetente}/contas/{idContaRemetente}/transferencia")
-	public ResponseEntity<String> transferirEntreContas(@PathVariable Integer idAgenciaRemetente,
-	                                                     @PathVariable Integer idClienteRemetente, @PathVariable Integer idContaRemetente,
-	                                                     @RequestParam Integer idAgenciaDestinataria, @RequestParam Integer idClienteDestinataria,
-	                                                     @RequestParam Integer idContaDestinataria, @RequestBody Double valor) {
-	    try {
-	        // Realiza a transferência entre as contas
-	        contaService.transferir(idAgenciaRemetente, idClienteRemetente, idContaRemetente, 
-	                                idAgenciaDestinataria, idClienteDestinataria, idContaDestinataria, valor);
+	    @PostMapping("/{idAgenciaRemetente}/clientes/{idClienteRemetente}/contas/{idContaRemetente}/transferencia")
+	    public ResponseEntity<String> transferirEntreContas(@PathVariable Integer idAgenciaRemetente,
+	                                                         @PathVariable Integer idClienteRemetente, @PathVariable Integer idContaRemetente,
+	                                                         @RequestParam Integer idAgenciaDestinataria, @RequestParam Integer idClienteDestinatario,
+	                                                         @RequestParam Integer idContaDestinataria, @RequestBody Double valor) {
+	        try {
+	            contaService.transferir(idAgenciaRemetente, idClienteRemetente, idContaRemetente,
+	                    idAgenciaDestinataria, idClienteDestinatario, idContaDestinataria, valor);
 
-	        // Registra a operação de transferência na conta de origem
-	        OperacoesCliente operacaoRemetente = new OperacoesCliente();
-	        operacaoRemetente.setCliente(clienteRepository.findById(idClienteRemetente).orElse(null));
-	        operacaoRemetente.setTipoOperacao("Transferência (Remetente)");
-	        operacaoRemetente.setValor(-valor);  // Valor negativo para indicar saída
-	        operacaoRemetente.setDataOperacao(LocalDateTime.now());
-	        operacoesClienteRepository.save(operacaoRemetente);
-
-	        // Registra a operação de transferência na conta de destino
-	        OperacoesCliente operacaoDestinatario = new OperacoesCliente();
-	        operacaoDestinatario.setCliente(clienteRepository.findById(idClienteDestinataria).orElse(null));
-	        operacaoDestinatario.setTipoOperacao("Transferência (Destinatário)");
-	        operacaoDestinatario.setValor(valor);  // Valor positivo para indicar entrada
-	        operacaoDestinatario.setDataOperacao(LocalDateTime.now());
-	        operacoesClienteRepository.save(operacaoDestinatario);
-
-	        return ResponseEntity.ok("Transferência realizada com sucesso.");
-	    } catch (IllegalArgumentException e) {
-	        return ResponseEntity.badRequest().body(e.getMessage());
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(500).body("Erro interno no servidor.");
+	            return ResponseEntity.ok("Transferência realizada com sucesso.");
+	        } catch (IllegalArgumentException e) {
+	            return ResponseEntity.badRequest().body(e.getMessage());
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return ResponseEntity.status(500).body("Erro interno no servidor.");
+	        }
 	    }
-	}
 
 	
 	
