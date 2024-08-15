@@ -11,6 +11,7 @@ import com.accenture.academico.model.Agencia;
 import com.accenture.academico.model.Cliente;
 import com.accenture.academico.model.ContaBancaria;
 import com.accenture.academico.model.OperacoesCliente;
+import com.accenture.academico.model.enums.TipoOperacao;
 import com.accenture.academico.repository.AgenciaRepository;
 import com.accenture.academico.repository.ClienteRepository;
 import com.accenture.academico.repository.ContaRepository;
@@ -66,7 +67,7 @@ public class ContaService {
 
 		OperacoesCliente operacao = new OperacoesCliente();
 		operacao.setCliente(conta.getCliente());
-		operacao.setTipoOperacao("Depósito");
+		operacao.setTipoOperacao(TipoOperacao.DEPOSITO);
 		operacao.setValor(valor);
 		operacao.setDataOperacao(LocalDateTime.now());
 		operacoesClienteRepository.save(operacao);
@@ -89,7 +90,7 @@ public class ContaService {
 
 		OperacoesCliente operacao = new OperacoesCliente();
 		operacao.setCliente(conta.getCliente());
-		operacao.setTipoOperacao("Saque");
+		operacao.setTipoOperacao(TipoOperacao.SAQUE);
 		operacao.setValor(valor);
 		operacao.setDataOperacao(LocalDateTime.now());
 		operacoesClienteRepository.save(operacao);
@@ -132,7 +133,7 @@ public class ContaService {
 // Registrar a operação de transferência para a conta remetente
 		OperacoesCliente operacaoRemetente = new OperacoesCliente();
 		operacaoRemetente.setCliente(contaRemetente.getCliente());
-		operacaoRemetente.setTipoOperacao("Transferência (Remetente)");
+		operacaoRemetente.setTipoOperacao(TipoOperacao.TRANSFERENCIA);
 		operacaoRemetente.setValor(-valor); // Valor negativo para indicar saída
 		operacaoRemetente.setDataOperacao(LocalDateTime.now());
 		operacoesClienteRepository.save(operacaoRemetente);
@@ -140,7 +141,7 @@ public class ContaService {
 // Registrar a operação de transferência para a conta destinatária
 		OperacoesCliente operacaoDestinatario = new OperacoesCliente();
 		operacaoDestinatario.setCliente(contaDestinataria.getCliente());
-		operacaoDestinatario.setTipoOperacao("Transferência (Destinatário)");
+		operacaoDestinatario.setTipoOperacao(TipoOperacao.TRANSFERENCIA);
 		operacaoDestinatario.setValor(valor); // Valor positivo para indicar entrada
 		operacaoDestinatario.setDataOperacao(LocalDateTime.now());
 		operacoesClienteRepository.save(operacaoDestinatario);

@@ -1,9 +1,12 @@
 package com.accenture.academico.model;
 
+import com.accenture.academico.model.enums.TipoConta;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,8 +26,8 @@ public class ContaBancaria {
     @Column(nullable = false)
     private Double saldo;
     
-    @Column(length = 20, nullable = false)
-    private String tipo;
+    @Enumerated(EnumType.STRING)
+    private TipoConta tipo;
 
     @ManyToOne
     @JoinColumn(name = "id_cliente", nullable = false)
