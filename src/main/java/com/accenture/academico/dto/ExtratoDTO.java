@@ -3,6 +3,7 @@ package com.accenture.academico.dto;
 import java.util.List;
 
 import com.accenture.academico.model.EnderecoCliente;
+import com.accenture.academico.model.enums.TipoConta;
 
 import lombok.Data;
 
@@ -24,7 +25,7 @@ public class ExtratoDTO {
         @Data
         public static class ContaDTO {
             private Double saldo;
-            private String tipo;
+            private TipoConta tipo;
         }
     }
 }

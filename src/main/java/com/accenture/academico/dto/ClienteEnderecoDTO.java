@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.accenture.academico.model.EnderecoCliente;
+import com.accenture.academico.model.enums.TipoConta;
 
 import lombok.Data;
 
@@ -20,6 +21,6 @@ public class ClienteEnderecoDTO {
     @Data
     public static class ContaDTO {
         private Double saldo;
-        private String tipo;
+        private TipoConta tipo;
     }
 }
