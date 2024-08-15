@@ -28,6 +28,9 @@ public class Agencia {
     @OneToMany(mappedBy = "agencia")
     @JsonManagedReference
     private List<Cliente> clientes;
+    
+    @Column(length = 100, nullable = false)
+    private String endereco;
 
     public Agencia() {}
 
