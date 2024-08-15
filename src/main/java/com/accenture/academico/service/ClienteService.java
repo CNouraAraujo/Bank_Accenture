@@ -32,27 +32,27 @@ public class ClienteService {
 	@Autowired
 	private ContaRepository contaRepository;
 	
-	public List<Cliente> listarClientesPorAgencia(Integer idAgencia) {
-        return clienteRepository.findAllByAgencia_IdAgencia(idAgencia);
-    }
+	 public List<Cliente> listarClientesPorAgencia(Integer numeroAgencia) {
+	        return clienteRepository.findAllByAgencia_NumeroAgencia(numeroAgencia);
+	    }
+	 public Optional<Cliente> obterClienteDeAgencia(Integer numeroAgencia, Integer idCliente) {
+		    return clienteRepository.findByIdAndAgencia_NumeroAgencia(idCliente, numeroAgencia);
+		}
+
 	
-	public Optional<Cliente> obterClienteDeAgencia(Integer idAgencia, Integer idCliente) {
-	    return clienteRepository.findByIdAndAgencia_IdAgencia(idCliente, idAgencia);
-	}
-	
-	public void deletarCliente(Integer idAgencia, Integer idCliente) {
+	public void deletarCliente(Integer numeroAgencia, Integer idCliente) {
         Cliente cliente = clienteRepository.findById(idCliente)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-        if (!cliente.getAgencia().getIdAgencia().equals(idAgencia)) {
+        if (!cliente.getAgencia().getNumeroAgencia().equals(numeroAgencia)) {
             throw new RuntimeException("Cliente não pertence à agência informada");
         }
 
         clienteRepository.delete(cliente);
     }
 
-	 public Cliente criarCliente(Integer idAgencia, ClienteEnderecoDTO dto) {
-	        Agencia agencia = agenciaRepository.findById(idAgencia)
+	 public Cliente criarCliente(Integer numeroAgencia, ClienteEnderecoDTO dto) {
+	        Agencia agencia = agenciaRepository.findByNumeroAgencia(numeroAgencia)
 	                .orElseThrow(() -> new RuntimeException("Agência não encontrada"));
 
 	        EnderecoCliente endereco = dto.getEndereco();
@@ -82,16 +82,16 @@ public class ClienteService {
 	        return clienteSalvo;
 	    }
 
-	public Optional<Cliente> atualizarCliente(Integer idCliente, ClienteDTO clienteDTO) {
+	public Optional<Cliente> atualizarCliente(Integer idCliente, ClienteEnderecoDTO clienteDTO) {
 
 		Optional<Cliente> cliente = clienteRepository.findById(idCliente);
 
 		if (cliente.isPresent()) {
 			Cliente clienteExistente = cliente.get();
-			clienteExistente.setNome(clienteDTO.nome());
-			clienteExistente.setCpf(clienteDTO.cpf());
-			clienteExistente.setTelefone(clienteDTO.telefone());
-			clienteExistente.setSenha(clienteDTO.senha());
+			clienteExistente.setNome(clienteDTO.getNome());
+			clienteExistente.setCpf(clienteDTO.getCpf());
+			clienteExistente.setTelefone(clienteDTO.getTelefone());
+			clienteExistente.setSenha(clienteDTO.getSenha());
 
 			return Optional.of(clienteRepository.save(clienteExistente));
 		} else {

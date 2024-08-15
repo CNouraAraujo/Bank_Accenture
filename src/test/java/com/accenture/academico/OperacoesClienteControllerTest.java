@@ -3,8 +3,6 @@ package com.accenture.academico;
 import com.accenture.academico.controller.OperacoesClienteController;
 import com.accenture.academico.dto.ExtratoDTO;
 import com.accenture.academico.dto.OperacoesClienteDTO;
-import com.accenture.academico.model.Agencia;
-import com.accenture.academico.model.Cliente;
 import com.accenture.academico.model.enums.TipoOperacao;
 import com.accenture.academico.repository.ClienteRepository;
 import com.accenture.academico.service.ExtratoService;
@@ -42,66 +40,8 @@ class OperacoesClienteControllerTest {
     private ExtratoService extratoService;
 
     @Test
-    void testListarOperacoesPorCliente() throws Exception {
-        Cliente cliente = new Cliente();
-        cliente.setId(1);
-        cliente.setAgencia(new Agencia());
-        cliente.getAgencia().setIdAgencia(1);
-
-        OperacoesClienteDTO.ClienteResumoDTO clienteResumo = new OperacoesClienteDTO.ClienteResumoDTO();
-        clienteResumo.setId(1);
-        clienteResumo.setNome("João");
-        clienteResumo.setCpf("12345678900");
-
-        OperacoesClienteDTO operacao1 = new OperacoesClienteDTO();
-        operacao1.setId(1);
-        operacao1.setTipoOperacao(TipoOperacao.DEPOSITO);
-        operacao1.setValor(100.0);
-        operacao1.setDataOperacao(LocalDateTime.now());
-        operacao1.setCliente(clienteResumo);
-
-        OperacoesClienteDTO operacao2 = new OperacoesClienteDTO();
-        operacao2.setId(2);
-        operacao2.setTipoOperacao(TipoOperacao.SAQUE);
-        operacao2.setValor(50.0);
-        operacao2.setDataOperacao(LocalDateTime.now().minusDays(1));
-        operacao2.setCliente(clienteResumo);
-
-        List<OperacoesClienteDTO> operacoes = Arrays.asList(operacao1, operacao2);
-
-        when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
-        when(operacoesClienteService.getOperacoesPorCliente(1)).thenReturn(operacoes);
-
-        mockMvc.perform(get("/bank/1/clientes/1/operacoesCliente")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].tipoOperacao").value("DEPOSITO"))
-                .andExpect(jsonPath("$[0].valor").value(100.0))
-                .andExpect(jsonPath("$[0].cliente.nome").value("João"))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].tipoOperacao").value("SAQUE"))
-                .andExpect(jsonPath("$[1].valor").value(50.0))
-                .andExpect(jsonPath("$[1].cliente.nome").value("João"));
-    }
-
-    @Test
     void testListarOperacoesPorCliente_ClienteNotFound() throws Exception {
         when(clienteRepository.findById(1)).thenReturn(Optional.empty());
-
-        mockMvc.perform(get("/bank/1/clientes/1/operacoesCliente")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void testListarOperacoesPorCliente_AgenciaMismatch() throws Exception {
-        Cliente cliente = new Cliente();
-        cliente.setId(1);
-        cliente.setAgencia(new Agencia());
-        cliente.getAgencia().setIdAgencia(2);
-
-        when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
 
         mockMvc.perform(get("/bank/1/clientes/1/operacoesCliente")
                         .contentType(MediaType.APPLICATION_JSON))

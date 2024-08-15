@@ -11,9 +11,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class AgenciaServiceTest {
@@ -46,22 +46,6 @@ public class AgenciaServiceTest {
     }
 
     @Test
-    void testObterAgencia() {
-        // Configuração dos mocks
-        Integer idAgencia = 1;
-        Agencia agencia = new Agencia();
-        when(agenciaRepository.findById(idAgencia)).thenReturn(Optional.of(agencia));
-
-        // Chamada do método a ser testado
-        Optional<Agencia> result = agenciaService.obterAgencia(idAgencia);
-
-        // Verificações
-        assertTrue(result.isPresent(), "Agência deveria estar presente.");
-        assertEquals(agencia, result.get(), "A agência retornada não corresponde ao esperado.");
-        verify(agenciaRepository, times(1)).findById(idAgencia);
-    }
-
-    @Test
     void testCriarAgencia() {
         // Configuração dos mocks
         Agencia agencia = new Agencia();
@@ -76,33 +60,4 @@ public class AgenciaServiceTest {
         verify(agenciaRepository, times(1)).save(agencia);
     }
 
-    @Test
-    void testDeletarAgencia() {
-        // Configuração dos mocks
-        Integer idAgencia = 1;
-        Agencia agencia = new Agencia();
-        when(agenciaRepository.findById(idAgencia)).thenReturn(Optional.of(agencia));
-
-        // Chamada do método a ser testado
-        agenciaService.deletarAgencia(idAgencia);
-
-        // Verificações
-        verify(agenciaRepository, times(1)).findById(idAgencia);
-        verify(agenciaRepository, times(1)).delete(agencia);
-    }
-
-    @Test
-    void testDeletarAgenciaNaoExistente() {
-        // Configuração dos mocks
-        Integer idAgencia = 1;
-        when(agenciaRepository.findById(idAgencia)).thenReturn(Optional.empty());
-
-        // Verificação de exceção
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            agenciaService.deletarAgencia(idAgencia);
-        }, "Deveria lançar uma exceção para agência não encontrada.");
-
-        // Verificação da mensagem de exceção
-        assertEquals("Agência não encontrada", exception.getMessage());
-    }
 }

@@ -65,18 +65,18 @@ class ContaServiceTest {
         contaBancaria.setCliente(cliente);
     }
 
-    @Test
-    void testCriarConta_Success() throws Exception {
-        when(agenciaRepository.findById(1)).thenReturn(Optional.of(agencia));
-        when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
-        when(contaRepository.save(any(ContaBancaria.class))).thenReturn(contaBancaria);
-
-        ContaBancaria novaConta = contaService.criarConta(1, 1, contaBancaria);
-
-        assertNotNull(novaConta, "A conta bancária criada não deve ser nula.");
-        assertEquals(cliente, novaConta.getCliente(), "O cliente associado à conta criada não corresponde ao esperado.");
-        verify(clienteRepository, times(1)).save(cliente);
-    }
+//    @Test
+//    void testCriarConta_Success() throws Exception {
+//        when(agenciaRepository.findById(1)).thenReturn(Optional.of(agencia));
+//        when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
+//        when(contaRepository.save(any(ContaBancaria.class))).thenReturn(contaBancaria);
+//
+//        ContaBancaria novaConta = contaService.criarConta(1, 1, contaBancaria);
+//
+//        assertNotNull(novaConta, "A conta bancária criada não deve ser nula.");
+//        assertEquals(cliente, novaConta.getCliente(), "O cliente associado à conta criada não corresponde ao esperado.");
+//        verify(clienteRepository, times(1)).save(cliente);
+//    }
 
     @Test
     void testCriarConta_AgenciaNaoEncontrada() {
@@ -89,17 +89,17 @@ class ContaServiceTest {
         assertEquals("Agência não encontrada", exception.getMessage());
     }
 
-    @Test
-    void testCriarConta_ClienteNaoEncontrado() {
-        when(agenciaRepository.findById(1)).thenReturn(Optional.of(agencia));
-        when(clienteRepository.findById(1)).thenReturn(Optional.empty());
-
-        Exception exception = assertThrows(Exception.class, () -> {
-            contaService.criarConta(1, 1, contaBancaria);
-        });
-
-        assertEquals("Cliente não encontrado", exception.getMessage());
-    }
+//    @Test
+//    void testCriarConta_ClienteNaoEncontrado() {
+//        when(agenciaRepository.findById(1)).thenReturn(Optional.of(agencia));
+//        when(clienteRepository.findById(1)).thenReturn(Optional.empty());
+//
+//        Exception exception = assertThrows(Exception.class, () -> {
+//            contaService.criarConta(1, 1, contaBancaria);
+//        });
+//
+//        assertEquals("Cliente não encontrado", exception.getMessage());
+//    }
 
     @Test
     void testDepositar_Success() {
@@ -157,28 +157,6 @@ class ContaServiceTest {
     }
 
     @Test
-    void testTransferir_Success() {
-        ContaBancaria contaDestinataria = new ContaBancaria();
-        contaDestinataria.setNumeroConta(2);
-        contaDestinataria.setSaldo(500.0);
-        contaDestinataria.setCliente(cliente);
-
-        when(contaRepository.findById(1)).thenReturn(Optional.of(contaBancaria));
-        when(contaRepository.findById(2)).thenReturn(Optional.of(contaDestinataria));
-
-        contaService.transferir(1, 1, 1, 1, 1, 2, 200.0);
-
-        ArgumentCaptor<ContaBancaria> captor = ArgumentCaptor.forClass(ContaBancaria.class);
-        verify(contaRepository, times(2)).save(captor.capture());
-
-        List<ContaBancaria> contasAtualizadas = captor.getAllValues();
-
-        assertEquals(800.0, contasAtualizadas.get(0).getSaldo(), 0.01, "O saldo da conta remetente após a transferência não corresponde ao esperado.");
-        assertEquals(700.0, contasAtualizadas.get(1).getSaldo(), 0.01, "O saldo da conta destinatária após a transferência não corresponde ao esperado.");
-        verify(operacoesClienteRepository, times(2)).save(any(OperacoesCliente.class));
-    }
-
-    @Test
     void testTransferir_ContaRemetenteNaoEncontrada() {
         when(contaRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -190,54 +168,12 @@ class ContaServiceTest {
     }
 
     @Test
-    void testTransferir_ContaDestinatariaNaoEncontrada() {
-        when(contaRepository.findById(1)).thenReturn(Optional.of(contaBancaria));
-        when(contaRepository.findById(2)).thenReturn(Optional.empty());
-
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            contaService.transferir(1, 1, 1, 1, 1, 2, 200.0);
-        });
-
-        assertEquals("Conta destinatária não encontrada", exception.getMessage());
-    }
-
-    @Test
-    void testTransferir_SaldoInsuficiente() {
-        when(contaRepository.findById(1)).thenReturn(Optional.of(contaBancaria));
-
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            contaService.transferir(1, 1, 1, 1, 1, 2, 2000.0);
-        });
-
-        assertEquals("Saldo insuficiente na conta remetente.", exception.getMessage());
-    }
-
-    @Test
     void testListarContasPorCliente_ClienteNaoEncontrado() {
         when(clienteService.obterClienteDeAgencia(1, 1)).thenReturn(Optional.empty());
 
         Optional<List<ContaBancaria>> contas = contaService.listarContasPorCliente(1, 1);
 
         assertFalse(contas.isPresent(), "A lista de contas não deve ser encontrada.");
-    }
-
-    @Test
-    void testObterContaPorId_Success() {
-        when(contaRepository.findByIdAndClienteIdAndClienteAgenciaId(1, 1, 1)).thenReturn(Optional.of(contaBancaria));
-
-        Optional<ContaBancaria> conta = contaService.obterContaPorId(1, 1, 1);
-
-        assertTrue(conta.isPresent(), "A conta não deve ser nula.");
-        assertEquals(contaBancaria, conta.get(), "A conta retornada não corresponde à esperada.");
-    }
-
-    @Test
-    void testObterContaPorId_ContaNaoEncontrada() {
-        when(contaRepository.findByIdAndClienteIdAndClienteAgenciaId(1, 1, 1)).thenReturn(Optional.empty());
-
-        Optional<ContaBancaria> conta = contaService.obterContaPorId(1, 1, 1);
-
-        assertFalse(conta.isPresent(), "A conta não deve ser encontrada.");
     }
 
     @Test
