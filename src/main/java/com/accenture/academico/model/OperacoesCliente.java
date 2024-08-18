@@ -17,16 +17,16 @@ import lombok.Data;
 @Data
 public class OperacoesCliente {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @ManyToOne
-    private Cliente cliente;
+	@ManyToOne
+	private Cliente cliente;
 
-    @Enumerated(EnumType.STRING)
-    private TipoOperacao tipoOperacao;
-    private Double valor;
-    private LocalDateTime dataOperacao;
+	@Enumerated(EnumType.STRING)
+	private TipoOperacao tipoOperacao;
+	private Double valor;
+	private LocalDateTime dataOperacao;
 
 }

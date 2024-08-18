@@ -24,33 +24,33 @@ import lombok.Data;
 @Table(name = "tb_cliente")
 public class Cliente {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(length = 45, nullable = false)
-    private String nome;
+	@Column(length = 45, nullable = false)
+	private String nome;
 
-    @Column(name = "cpf", length = 20, nullable = false)
-    private String cpf;
+	@Column(name = "cpf", length = 20, nullable = false)
+	private String cpf;
 
-    @Column(length = 20, nullable = false)
-    private String telefone;
-    
-    @Column(length = 50, nullable = false)
-    private String senha;
+	@Column(length = 20, nullable = false)
+	private String telefone;
 
-    @ManyToOne
-    @JoinColumn(name = "id_agencia", nullable = false)
-    @JsonBackReference
-    private Agencia agencia;
+	@Column(length = 50, nullable = false)
+	private String senha;
 
-    @OneToOne
-    @JoinColumn(name = "id_endereco", nullable = false)
-    private EnderecoCliente enderecoCliente;
-    
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<ContaBancaria> contaBancarias = new ArrayList<>();
+	@ManyToOne
+	@JoinColumn(name = "id_agencia", nullable = false)
+	@JsonBackReference
+	private Agencia agencia;
+
+	@OneToOne
+	@JoinColumn(name = "id_endereco", nullable = false)
+	private EnderecoCliente enderecoCliente;
+
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
+	private List<ContaBancaria> contaBancarias = new ArrayList<>();
 
 }

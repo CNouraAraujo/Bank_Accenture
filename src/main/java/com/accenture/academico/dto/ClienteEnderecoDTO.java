@@ -11,16 +11,29 @@ import lombok.Data;
 @Data
 public class ClienteEnderecoDTO {
 
-    private String nome;
-    private String cpf;
-    private String telefone;
-    private String senha;
-    private EnderecoCliente endereco;
-    private List<ContaDTO> contas = new ArrayList<>();
+	private String nome;
+	private String cpf;
+	private String telefone;
+	private String senha;
+	private EnderecoCliente endereco;
+	private List<ContaDTO> contas = new ArrayList<>();
 
-    @Data
-    public static class ContaDTO {
-        private Double saldo;
-        private TipoConta tipo;
-    }
+	public ClienteEnderecoDTO(String nome, String cpf, String telefone, String senha, EnderecoCliente endereco,
+			List<ContaDTO> contas) {
+		this.nome = nome;
+		this.cpf = cpf;
+		this.telefone = telefone;
+		this.senha = senha;
+		this.endereco = endereco;
+		this.contas = contas;
+	}
+
+	public ClienteEnderecoDTO() {
+	}
+
+	@Data
+	public static class ContaDTO {
+		private Double saldo;
+		private TipoConta tipo;
+	}
 }

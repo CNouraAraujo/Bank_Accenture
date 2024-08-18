@@ -15,44 +15,43 @@ import com.accenture.academico.repository.ClienteRepository;
 @Service
 public class ExtratoService {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
+	@Autowired
+	private ClienteRepository clienteRepository;
 
-    @Autowired
-    private OperacoesClienteService operacoesClienteService;
+	@Autowired
+	private OperacoesClienteService operacoesClienteService;
 
-    public Optional<ExtratoDTO> obterExtrato(Integer numeroAgencia, Integer idCliente) {
-        Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
+	public Optional<ExtratoDTO> obterExtrato(Integer numeroAgencia, Integer idCliente) {
+		Optional<Cliente> clienteOpt = clienteRepository.findById(idCliente);
 
-        if (clienteOpt.isPresent() && clienteOpt.get().getAgencia().getNumeroAgencia().equals(numeroAgencia)) {
-            Cliente cliente = clienteOpt.get();
-            
-            // Preencher dados do cliente
-            ExtratoDTO.ClienteEnderecoDTO clienteDTO = new ExtratoDTO.ClienteEnderecoDTO();
-            clienteDTO.setNome(cliente.getNome());
-            clienteDTO.setCpf(cliente.getCpf());
-            clienteDTO.setTelefone(cliente.getTelefone());
-            clienteDTO.setSenha(cliente.getSenha());
-            clienteDTO.setEndereco(cliente.getEnderecoCliente());
-            clienteDTO.setContas(cliente.getContaBancarias().stream()
-                .map(conta -> {
-                    ExtratoDTO.ClienteEnderecoDTO.ContaDTO contaDTO = new ExtratoDTO.ClienteEnderecoDTO.ContaDTO();
-                    contaDTO.setSaldo(conta.getSaldo());
-                    contaDTO.setTipo(conta.getTipo());
-                    return contaDTO;
-                }).collect(Collectors.toList()));
+		if (clienteOpt.isPresent() && clienteOpt.get().getAgencia().getNumeroAgencia().equals(numeroAgencia)) {
+			Cliente cliente = clienteOpt.get();
 
-            // Preencher operações do cliente
-            List<OperacoesClienteDTO> operacoesDTO = operacoesClienteService.getOperacoesPorCliente(idCliente);
+			// Preencher dados do cliente
+			ExtratoDTO.ClienteEnderecoDTO clienteDTO = new ExtratoDTO.ClienteEnderecoDTO();
+			clienteDTO.setNome(cliente.getNome());
+			clienteDTO.setCpf(cliente.getCpf());
+			clienteDTO.setTelefone(cliente.getTelefone());
+			clienteDTO.setSenha(cliente.getSenha());
+			clienteDTO.setEndereco(cliente.getEnderecoCliente());
+			clienteDTO.setContas(cliente.getContaBancarias().stream().map(conta -> {
+				ExtratoDTO.ClienteEnderecoDTO.ContaDTO contaDTO = new ExtratoDTO.ClienteEnderecoDTO.ContaDTO();
+				contaDTO.setSaldo(conta.getSaldo());
+				contaDTO.setTipo(conta.getTipo());
+				return contaDTO;
+			}).collect(Collectors.toList()));
 
-            // Criar DTO unificado
-            ExtratoDTO extratoDTO = new ExtratoDTO();
-            extratoDTO.setCliente(clienteDTO);
-            extratoDTO.setOperacoes(operacoesDTO);
+			// Preencher operações do cliente
+			List<OperacoesClienteDTO> operacoesDTO = operacoesClienteService.getOperacoesPorCliente(idCliente);
 
-            return Optional.of(extratoDTO);
-        }
+			// Criar DTO unificado
+			ExtratoDTO extratoDTO = new ExtratoDTO();
+			extratoDTO.setCliente(clienteDTO);
+			extratoDTO.setOperacoes(operacoesDTO);
 
-        return Optional.empty();
-    }
+			return Optional.of(extratoDTO);
+		}
+
+		return Optional.empty();
+	}
 }

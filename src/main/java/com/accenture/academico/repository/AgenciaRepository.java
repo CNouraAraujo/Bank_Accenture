@@ -9,11 +9,11 @@ import com.accenture.academico.model.Agencia;
 
 @Repository
 public interface AgenciaRepository extends JpaRepository<Agencia, Integer> {
-	
+
 	Optional<Agencia> findByNumeroAgencia(Integer numeroAgencia);
 
-    boolean existsByNumeroAgencia(Integer numeroAgencia);
+	boolean existsByNumeroAgencia(Integer numeroAgencia);
 
-    void deleteByNumeroAgencia(Integer numeroAgencia);
-    
+	void deleteByNumeroAgencia(Integer numeroAgencia);
+
 }

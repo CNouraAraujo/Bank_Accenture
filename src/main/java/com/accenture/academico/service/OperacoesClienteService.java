@@ -12,26 +12,26 @@ import java.util.stream.Collectors;
 @Service
 public class OperacoesClienteService {
 
-    @Autowired
-    private OperacoesClienteRepository operacoesClienteRepository;
+	@Autowired
+	private OperacoesClienteRepository operacoesClienteRepository;
 
-    public List<OperacoesClienteDTO> getOperacoesPorCliente(Integer idCliente) {
-        List<OperacoesCliente> operacoes = operacoesClienteRepository.findByCliente_Id(idCliente);
-        
-        return operacoes.stream().map(operacao -> {
-            OperacoesClienteDTO dto = new OperacoesClienteDTO();
-            dto.setId(operacao.getId());
-            dto.setTipoOperacao(operacao.getTipoOperacao());
-            dto.setValor(operacao.getValor());
-            dto.setDataOperacao(operacao.getDataOperacao());
+	public List<OperacoesClienteDTO> getOperacoesPorCliente(Integer idCliente) {
+		List<OperacoesCliente> operacoes = operacoesClienteRepository.findByCliente_Id(idCliente);
 
-            OperacoesClienteDTO.ClienteResumoDTO clienteDTO = new OperacoesClienteDTO.ClienteResumoDTO();
-            clienteDTO.setId(operacao.getCliente().getId());
-            clienteDTO.setNome(operacao.getCliente().getNome());
-            clienteDTO.setCpf(operacao.getCliente().getCpf());
+		return operacoes.stream().map(operacao -> {
+			OperacoesClienteDTO dto = new OperacoesClienteDTO();
+			dto.setId(operacao.getId());
+			dto.setTipoOperacao(operacao.getTipoOperacao());
+			dto.setValor(operacao.getValor());
+			dto.setDataOperacao(operacao.getDataOperacao());
 
-            dto.setCliente(clienteDTO);
-            return dto;
-        }).collect(Collectors.toList());
-    }
+			OperacoesClienteDTO.ClienteResumoDTO clienteDTO = new OperacoesClienteDTO.ClienteResumoDTO();
+			clienteDTO.setId(operacao.getCliente().getId());
+			clienteDTO.setNome(operacao.getCliente().getNome());
+			clienteDTO.setCpf(operacao.getCliente().getCpf());
+
+			dto.setCliente(clienteDTO);
+			return dto;
+		}).collect(Collectors.toList());
+	}
 }

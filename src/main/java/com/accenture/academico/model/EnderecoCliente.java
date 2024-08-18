@@ -8,26 +8,26 @@ import lombok.Data;
 @Table(name = "tb_endereco")
 public class EnderecoCliente {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(length = 200, nullable = false)
-    private String logradouro;
+	@Column(length = 200, nullable = false)
+	private String logradouro;
 
-    @Column(nullable = false)
-    private int cep;
+	@Column(nullable = false)
+	private int cep;
 
-    @Column(nullable = false)
-    private int numero;
+	@Column(nullable = false)
+	private int numero;
 
-    @Column(length = 300)
-    private String complemento;
+	@Column(length = 300)
+	private String complemento;
 
-    @Column(length = 50, nullable = false)
-    private String estado;
+	@Column(length = 50, nullable = false)
+	private String estado;
 
-    @Column(length = 150, nullable = false)
-    private String cidade;
+	@Column(length = 150, nullable = false)
+	private String cidade;
 
 }

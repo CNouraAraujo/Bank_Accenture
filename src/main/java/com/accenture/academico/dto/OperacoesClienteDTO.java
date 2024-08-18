@@ -9,16 +9,24 @@ import lombok.Data;
 @Data
 public class OperacoesClienteDTO {
 
-    private Integer id;
-    private TipoOperacao tipoOperacao;
-    private Double valor;
-    private LocalDateTime dataOperacao;
-    private ClienteResumoDTO cliente;
+	private Integer id;
+	private TipoOperacao tipoOperacao;
+	private Double valor;
+	private LocalDateTime dataOperacao;
+	private ClienteResumoDTO cliente;
 
-    @Data
-    public static class ClienteResumoDTO {
-        private Integer id;
-        private String nome;
-        private String cpf;
-    }
+	public OperacoesClienteDTO(TipoOperacao tipoOperacao, double valor) {
+		this.tipoOperacao = tipoOperacao;
+		this.valor = valor;
+	}
+
+	public OperacoesClienteDTO() {
+	}
+
+	@Data
+	public static class ClienteResumoDTO {
+		private Integer id;
+		private String nome;
+		private String cpf;
+	}
 }

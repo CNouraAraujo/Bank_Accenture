@@ -17,11 +17,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.accenture.academico.dto.ClienteDTO;
 import com.accenture.academico.dto.ClienteEnderecoDTO;
 import com.accenture.academico.model.Agencia;
 import com.accenture.academico.model.Cliente;
 import com.accenture.academico.service.AgenciaService;
 import com.accenture.academico.service.ClienteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/bank")

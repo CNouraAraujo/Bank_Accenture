@@ -19,41 +19,42 @@ import lombok.Data;
 @Table(name = "tb_agencia")
 public class Agencia {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idAgencia;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer idAgencia;
 
-    @Column(length = 45, nullable = false)
-    private String nome;
+	@Column(length = 45, nullable = false)
+	private String nome;
 
-    @Column(length = 15, nullable = false)
-    private String telefone;
+	@Column(length = 15, nullable = false)
+	private String telefone;
 
-    @OneToMany(mappedBy = "agencia")
-    @JsonManagedReference
-    private List<Cliente> clientes;
-    
-    @Column(length = 100, nullable = false)  // Novo campo endereço
-    private String endereco;
-    
-    @Column(length = 10, nullable = false, unique = true)  // Novo campo numeroAgencia
-    private Integer numeroAgencia;
+	@OneToMany(mappedBy = "agencia")
+	@JsonManagedReference
+	private List<Cliente> clientes;
 
-    public Agencia() {}
+	@Column(length = 100, nullable = false) // Novo campo endereço
+	private String endereco;
 
-    public Agencia(Integer codigoBanco) {
-        this.idAgencia = codigoBanco;
-    }
-    
-    @PrePersist
-    private void prePersist() {
-        if (numeroAgencia == null) {
-            numeroAgencia = generateNumeroAgencia();
-        }
-    }
-    
-    private Integer generateNumeroAgencia() {
-        return (int) (Math.random() * 10000);  // Ajuste conforme necessário
-    }
-    
+	@Column(length = 10, nullable = false, unique = true) // Novo campo numeroAgencia
+	private Integer numeroAgencia;
+
+	public Agencia() {
+	}
+
+	public Agencia(Integer codigoBanco) {
+		this.idAgencia = codigoBanco;
+	}
+
+	@PrePersist
+	private void prePersist() {
+		if (numeroAgencia == null) {
+			numeroAgencia = generateNumeroAgencia();
+		}
+	}
+
+	private Integer generateNumeroAgencia() {
+		return (int) (Math.random() * 10000); // Ajuste conforme necessário
+	}
+
 }

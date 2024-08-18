@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface OperacoesClienteRepository extends JpaRepository<OperacoesCliente, Integer> {
 
-    // Método para buscar todas as operações realizadas por um cliente específico
-    List<OperacoesCliente> findByCliente_Id(Integer idCliente);
+	// Método para buscar todas as operações realizadas por um cliente específico
+	List<OperacoesCliente> findByCliente_Id(Integer idCliente);
 }

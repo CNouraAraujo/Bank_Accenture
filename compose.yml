@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+
+  #  bancos de dados
+  db_bank:
+    image: mysql:8.0
+    container_name: db_bank
+    environment:
+      MYSQL_DATABASE: db_bank
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - bank_data:/var/lib/mysql
+
+volumes:
+  bank_data:
